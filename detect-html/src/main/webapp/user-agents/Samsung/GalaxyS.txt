@@ -1,0 +1,74 @@
+Samsung I7500 Galaxy
+Released 2009, June
+Android OS, v1.5
+Announced	2009, April. Released 2009, June
+Status	Discontinued
+Size	3.2 inches (~47.0% screen-to-body ratio)
+Resolution	320 x 480 pixels (~180 ppi pixel density)
+OS	Android OS, v1.5 (Cupcake)
+Internal	8 GB, 128 MB RAM
+http://www.gsmarena.com/samsung_i7500_galaxy-2791.php
+https://en.wikipedia.org/wiki/Samsung_Galaxy_(original)
+Samsung Galaxy (GT-I7500)
+Successor	Samsung Galaxy Spica/Lite
+Samsung Galaxy S (direct)
+Operating system	Android v1.6 (Donut)
+Originally Android 1.5
+Upgradable to Android 2.3 unofficially
+Memory	128 MB RAM
+Storage	8 GB
+
+Samsung I9000 Galaxy S
+Released 2010, June
+Android OS, v2.1, up to v2.3
+Also known as Samsung I9008 Galaxy S in China
+Announced	2010, March. Released 2010, June
+Status	Discontinued
+Size	4.0 inches (~58.0% screen-to-body ratio)
+Resolution	480 x 800 pixels (~233 ppi pixel density)
+OS	Android OS, v2.1 (Eclair), upgradable to v2.3 (Gingerbread)
+Internal	8/16 GB, 512 MB RAM
+http://www.gsmarena.com/samsung_i9000_galaxy_s-3115.php
+https://en.wikipedia.org/wiki/Samsung_Galaxy_S
+Model	i9000
+Operating system	Android 2.3.6 "Gingerbread" with TouchWiz UI 3.0/4.0
+The Galaxy S name continued on with the semi-related Snapdragon-based Galaxy S Plus and NovaThor-based Galaxy S Advance
+smartphones. The next major release of the series was the Samsung Galaxy S II.
+In 2012, Samsung introduced the dual SIM version of the Galaxy S, Samsung Galaxy S Duos.
+
+Samsung I9001 Galaxy S Plus
+Released 2011, July
+Android OS, v2.3
+Also known as Samsung Galaxy S 2011 Edition
+Announced	2011, April. Released 2011, July
+Status	Discontinued
+Size	4.0 inches (~58.0% screen-to-body ratio)
+Resolution	480 x 800 pixels (~233 ppi pixel density)
+OS	Android OS, v2.3 (Gingerbread)
+Internal	8/16 GB, 512 MB RAM
+http://www.gsmarena.com/samsung_i9001_galaxy_s_plus-3908.php
+https://en.wikipedia.org/wiki/Samsung_Galaxy_S_Plus
+First released	July 2011
+Operating system
+Android 2.3 with TouchWiz UI and Android 5.1.1 via Custom Roms
+It originally came with Android 2.3.3, but it can be upgraded to Android 2.3.6. The device also unofficially supports
+CyanogenMod versions up to 12.1 (Android 5.1.1).
+
+Samsung I9070 Galaxy S Advance
+Released 2012, April
+Android OS, v2.3.6
+Also known as Samsung Galaxy S II Lite
+LAUNCH	Announced	2012, January
+Status	Available. Released 2012, April
+Size	4.0 inches (~58.7% screen-to-body ratio)
+Resolution	480 x 800 pixels (~233 ppi pixel density)
+OS	Android OS, v2.3.6 (Gingerbread), upgradable to v4.1.2 (Jelly Bean)
+http://www.gsmarena.com/samsung_i9070_galaxy_s_advance-4469.php
+https://en.wikipedia.org/wiki/Samsung_Galaxy_S_Advance
+Samsung i9070 Galaxy S Advance
+The Samsung GT-I9070 Galaxy S Advance (also known as the Galaxy S II Lite)
+First released	April 2012;
+Operating system	Android v2.3.6 (Gingerbread) upgradable to Android v4.1.2 (Jelly Bean)
+Memory	768 MB RAM (555 MB available for user processes : Gingerbread) (625 mb avaible for user processes : Jellybean)
+Storage	8 GB or 12 GB for user 4 GB for apps
+Display	4 in (100 mm) Super AMOLED 800x480 resolution (~233 ppi)

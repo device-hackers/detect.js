@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.playtech.ngm</groupId>
+    <artifactId>universal-device-detection</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Universal Device Detection</name>
+    <url>http://dev-ngm.playtechgaming.com/detect/</url>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.playtech.ngm</groupId>
+                <artifactId>detect-js</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.playtech.ngm</groupId>
+                <artifactId>detect-html</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>detect-js</module>
+        <module>detect-html</module>
+    </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>ngm-releases</name>
+            <url>http://nexus-mobile.ee.playtech.corp/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus</id>
+            <name>ngm-snapshots</name>
+            <url>http://nexus-mobile.ee.playtech.corp/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

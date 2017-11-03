@@ -1,0 +1,62 @@
+/**
+ * By Bit
+ */
+/* Fixes for theme styles */
+span.runtime {
+    margin-left: 10px;
+}
+
+#qunit-tests b.counts {
+    color: inherit;
+}
+
+#qunit-tests li li.fail {
+    color: inherit;
+}
+
+#qunit-userAgent {
+    width: 75%;
+}
+
+/* Customization */
+.qunit-assert-list span.runtime {
+    display: none; /*Just to remove excessive info overhead*/
+}
+
+ol.qunit-assert-list {
+    margin-top: 675px !important;
+}
+
+#userAgent {
+    position: absolute;
+    top: -675px;
+    color: blueviolet;
+    font-size: 12px;
+}
+
+#qunit-test-output-852320c8 ol.qunit-assert-list {
+    margin-top: 0 !important;
+}
+
+#qunit-test-output-553c071f ol.qunit-assert-list,
+#qunit-test-output-300f7d4b ol.qunit-assert-list,
+#qunit-test-output-957c1be4 ol.qunit-assert-list {
+    margin-top: 140px !important;
+}
+
+#qunit-test-output-553c071f #userAgent,
+#qunit-test-output-300f7d4b #userAgent,
+#qunit-test-output-957c1be4 #userAgent {
+    top: -140px;
+}
+
+li.pass, li.fail {
+    overflow: visible !important;
+}
+
+.module-name {
+    background-color: #76b900 !important;
+    color: #E1E1D5 !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}

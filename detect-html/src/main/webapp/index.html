@@ -1,0 +1,683 @@
+<!doctype html>
+<html>
+<head>
+    <title>Universal Device Detection</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        BODY {
+            font-family: Arial, Helvetica, sans-serif;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        CODE {
+            color: darkblue;
+        }
+
+        UL {
+            padding-bottom: 15px;
+        }
+
+        .apiExamples {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .apiExamples CAPTION {
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .apiExamples TH, .apiExamples TD {
+            padding: 8px;
+            height: 15px;
+            border: 1px solid silver;
+            font-family: monospace;
+        }
+
+        .apiExamples TH {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: darkseagreen;
+            color: white;
+        }
+
+        .apiExamples tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .apiExamples .separator {
+            background-color: #C2CCD1;
+            height: 0px;
+        }
+
+        .apiExamples tr:hover {
+            background-color: lightcyan;
+        }
+
+        .detectApi {
+            color: darkblue;
+        }
+
+        .typeApi {
+            color: #C75233;
+        }
+
+        .familyApi {
+            color: #5E740B;
+        }
+
+        .deviceApi {
+            color: maroon;
+        }
+
+        .osApi {
+            color: blueviolet;
+        }
+
+        .browserApi {
+            color: cadetblue;
+        }
+
+        .userAgentEmulator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 130px;
+        }
+
+        .userAgentEmulator SELECT {
+            width: 100px;
+        }
+    </style>
+    <script src="res/js/com/playtech/ngm/detect/public/js/detect-data.js"></script>
+    <script src="res/js/com/playtech/ngm/detect/public/js/detect-logic.js"></script>
+    <script src="res/js/com/playtech/ngm/detect/example-extensions/detect-extension-example.js"></script>
+    <script src="res/js/com/playtech/ngm/detect/example-extensions/detect-extension-resolution.js"></script>
+    <!--<script src="res/js/com/playtech/ngm/detect/example-extensions/detect-extension-phablets.js"></script>-->
+    <script>
+        var mocks = {
+            noEmulation : {
+                userAgent : navigator.userAgent,
+                screenWidth : screen.width,
+                screenHeight : screen.height,
+                devicePixelRatio : window.devicePixelRatio
+            },
+
+            iPhone5 : {
+                userAgent : "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_3 like Mac OS X) AppleWebKit/536.26 " +
+                    "(KHTML, like Gecko) Version/6.0 Mobile/10B329 Safari/8536.25",
+                screenWidth : 568,
+                screenHeight : 320,
+                devicePixelRatio : 2
+            },
+
+            iPadRetina : {
+                userAgent: "Mozilla/5.0 (iPad; CPU OS 8_0_2 like Mac OS X) AppleWebKit/600.1.4 " +
+                    "(KHTML, like Gecko) CriOS/38.0.2125.59 Mobile/12A405 Safari/600.1.4 (000296)",
+                screenWidth : 1024,
+                screenHeight : 768,
+                devicePixelRatio : 2
+            },
+
+            nexus5 : {
+                userAgent: "Mozilla/5.0 (Linux; Android 4.4.4; Nexus 5 Build/KTU84P) AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Version/4.0 Chrome/33.0.0.0 Mobile Safari/537.36"
+            },
+
+            galaxyTabS105 : {
+                userAgent: "Mozilla/5.0 (Linux; Android 4.4.2; uk-ua; SAMSUNG SM-T800 Build/KOT49H) AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Version/1.5 Chrome/28.0.1500.94 Safari/537.36"
+            },
+
+            lumia920 : {
+                userAgent: "Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; " +
+                    "Touch; NOKIA; Lumia 920) UCBrowser/4.2.1.541 Mobile"
+            },
+
+            meizuMx4Pro : {
+                userAgent: "Mozilla/5.0 (Linux; Android 4.4.4; MX4 Pro Build/KTU84P) AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Chrome/43.0.2357.93 Mobile Safari/537.36"
+            },
+
+            xiaomiMi4 : {
+                userAgent: "Mozilla/5.0 (Linux; Android 4.4.4; MI 4LTE Build/KTU84P) AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Version/4.0 Chrome/33.0.0.0 Mobile Safari/537.36 bdbrowser_i18n/4.5.0.4"
+            },
+
+            macOS : {
+                userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/600.6.3 " +
+                    "(KHTML, like Gecko) Version/8.0.6 Safari/600.6.3"
+            },
+
+            linuxMint17 : {
+                userAgent: "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
+            },
+
+            windows : {
+                userAgent: "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+                    "Chrome/44.0.2403.107 Safari/537.36 OPR/31.0.1889.99"
+            }
+        };
+
+        window.addEventListener("load", function() {
+            $("userAgentEmulator").addEventListener("change", function() {
+                Detect.init(mocks[selectedMock()]);
+                fillApiTable();
+            });
+
+            Detect.init(mocks.noEmulation);
+            fillApiTable();
+            generateMailToLink();
+        });
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+
+        function selectedMock() {
+            return $("userAgentEmulator").options[$("userAgentEmulator").selectedIndex].value;
+        }
+
+        function fillApiTable() {
+            $("userAgentValue").innerText = mocks[selectedMock()].userAgent;
+            $("typeName").innerText = Detect.Type.commercialName();
+            $("familyName").innerText = Detect.Family.commercialName();
+            $("deviceName").innerText = Detect.Device.commercialName();
+            $("osName").innerText = Detect.OS.commercialName();
+            $("osVersion").innerText = Detect.OS.version();
+            $("browserName").innerText = Detect.Browser.commercialName();
+            $("browserVersion").innerText = Detect.Browser.version();
+            $("allInfo").innerHTML = "<pre>" + JSON.stringify(Detect.allInfo(), null, '  ') + "</pre>";
+            $("belongsTo").innerText = Detect.Family.is(Detect.F.Iphone);
+            $("belongsToAny").innerText = Detect.Family.isAnyOf(Detect.F.Iphone, Detect.F.Lumia, Detect.F.NexusSmartPhones);
+            $("deviceIs").innerText = Detect.Device.is(Detect.D.Iphone5);
+            $("deviceIsAny").innerText = Detect.Device.isAnyOf(Detect.D.Iphone5, Detect.D.Ipad);
+            $("isUnidentified").innerText = Detect.Type.is(Detect.T.Unidentified);
+            $("isSmartPhone").innerText = Detect.Type.is(Detect.T.SmartPhone);
+            $("isTablet").innerText = Detect.Type.is(Detect.T.Tablet);
+            $("isDesktop").innerText = Detect.Type.is(Detect.T.Desktop);
+            $("osIs").innerText = Detect.OS.is(Detect.O.WindowsPhone);
+            $("osIsAny").innerText = Detect.OS.isAnyOf(Detect.O.WindowsPhone, Detect.O.Android);
+            $("osVersionIs").innerText = Detect.OS.versionIs('8');
+            $("osVersionIsExactly").innerText = Detect.OS.versionIsExactly('8.1');
+            $("osVersionIsLaterThan").innerText = Detect.OS.versionIsLaterThan('9.0.1');
+            $("osVersionIsEarlierThan").innerText = Detect.OS.versionIsEarlierThan('9.0.0');
+            $("browserIs").innerText = Detect.Browser.is(Detect.B.AndroidWebkit);
+            $("browserIsAny").innerText = Detect.Browser.isAnyOf(Detect.B.AndroidWebkit, Detect.B.Chrome);
+            $("browserVersionIs").innerText = Detect.Browser.versionIs('4.0');
+            $("browserVersionIsLaterThan").innerText = Detect.Browser.versionIsLaterThan('0');
+            $("browserVersionIsEarlierThan").innerText = Detect.Browser.versionIsEarlierThan('100');
+            $("extraInfo").innerText = Detect.Device.extraInfo();
+            $("familyExtraInfo").innerText = Detect.Family.extraInfo();
+            $("osExtraInfo").innerText = Detect.OS.extraInfo();
+            $("browserExtraInfo").innerText = Detect.Browser.extraInfo();
+            $("deviceExtensionWidth").innerText = Detect.Device.width();
+            $("deviceExtensionHeight").innerText = Detect.Device.height();
+        }
+
+        function encodeEmailCorrectly(generatedLink) {
+            if (/(?:baidubrowser|bdbrowser)/i.test(navigator.userAgent)) {
+                return encodeURIComponent(generatedLink);
+            } else {
+                return encodeURI(generatedLink);
+            }
+        }
+
+        function generateMailToLink() {
+            $("mailToLink").addEventListener("click", function() {
+                var deviceInfo = Detect.Device.rawID() + ", " + Detect.Device.commercialName();
+                var promptText = prompt("Please enter your device model", deviceInfo);
+                var deviceInfoToInclude = (promptText == deviceInfo) ?
+                    "(" + deviceInfo + ")" : "(" + deviceInfo + ") \"" + promptText + "\"";
+                var navigatorInfo = "";
+
+                for (var prop in window.navigator) {
+                    if (!(window.navigator[prop] instanceof Function) && !(window.navigator[prop] instanceof Object)) {
+                        navigatorInfo += "navigator." + prop + " : " + window.navigator[prop] + "\n";
+                    }
+                }
+
+                var generatedLink = "subject=[DetectJS] " +
+                    deviceInfoToInclude +
+                    " on '" + Detect.OS.commercialName() + " " + Detect.OS.version() +
+                    "' via '" + Detect.Browser.commercialName() + " " + Detect.Browser.version() +
+                    "'&body=" + navigator.userAgent + "\n\n" +
+                    JSON.stringify(Detect.allInfo(), null, '    ') + "\n\n" +
+                    "screen.width x height : " + screen.width + "x" + screen.height + "\n" +
+                    "window.innerWidth x innerHeight : " + window.innerWidth + "x" + window.innerHeight + "\n" +
+                    "window.devicePixelRatio : " + window.devicePixelRatio + "\n" +
+                    "window.navigator.standalone : " + window.navigator.standalone + "\n" +
+                    "window.orientation : " + window.orientation + "\n\n" +
+                    "navigator.javaEnabled() : " + navigator.javaEnabled() + "\n" +
+                    navigatorInfo;
+
+                $("mailToLink").href = "mailto:detect.js.org@gmail.com?" + encodeEmailCorrectly(generatedLink);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Detect.js</h1>
+    <h2>Universal Device Detection</h2>
+    <p>
+        <b>Detect.js</b> is an attempt to centralize device/OS/browser and
+        versions detection routine.
+    </p>
+    <p>
+        By creating Universal Device Detection API.
+    </p>
+    <p>
+        Release notes and other info:
+            <a href="https://confluence.playtech.corp/display/MOBUA/Universal+Device+Detection">
+            https://confluence.playtech.corp/display/MOBUA/Universal+Device+Detection</a><br>
+
+        QA: <a href="qunit-tests.html">QUnit Tests</a><br>
+
+        Contacts:
+            <a href="mailto:detect.js.org@gmail.com?subject=Universal Device Detection&body=Note regarding the library">
+                E-mail to author</a>
+    </p>
+    <p>
+        <b>Main targets</b> followed by this library:
+        <ul>
+            <li>Simple human readable API</li>
+            <li>High performance</li>
+            <li>Low cost maintenance</li>
+            <li>Reliability and quality (entities added to library covered by unit-tests)</li>
+            <li>Clean Core and extensibility</li>
+        </ul>
+    </p>
+    <p>
+        <b>Main idea</b> of API design is:
+        <ul>
+            <li>No more relying on raw strings like <code>API.getDevice() == "iPhone5"</code></li><br>
+            <li>Especially nonsense like <code>API.isNexus5()</code></li><br>
+            <li>You now get maps at your disposal like:<br>
+                <code>
+                Detect.D = {<br>
+                &nbsp;&nbsp;Iphone5 : {name : "Apple - iPhone 5"},<br>
+                &nbsp;&nbsp;Ipad : {name : "Apple - iPad"}<br>
+                }</code><br>
+                (where D stands for "Devices")<br>
+                and human readable API like:<br>
+                <code>Detect.Device.is(Detect.D.Iphone5)</code>
+            </li>
+        </ul>
+    </p>
+    <p>Your current user-agent is: "<i id="userAgentValue"></i>"</p>
+    <p>Emulate another user-agent using select in the top right corner &#8599;</p>
+    <div class="userAgentEmulator">
+        <span>&#10132;</span>
+        <select id="userAgentEmulator">
+            <option value="noEmulation">No emulation</option>
+            <option value="iPhone5">iPhone 5, iOS 6, Safari</option>
+            <option value="iPadRetina">iPad Retina, iOS 8, Chrome</option>
+            <option value="nexus5">Nexus 5, Android 4, Native Wrapper</option>
+            <option value="galaxyTabS105">Galaxy Tab S 10.5, Android 4, Android Browser Chromium</option>
+            <option value="lumia920">Lumia 920, Windows Phone 8.0, UC Browser</option>
+            <option value="meizuMx4Pro">Meizu MX 4 Pro, Android 4, Chrome</option>
+            <option value="xiaomiMi4">Xiaomi Mi4, Android 4, Baidu Browser</option>
+            <option value="macOS">Desktop, Mac OS 10, Safari</option>
+            <option value="linuxMint17">Desktop, Linux Mint 17, Firefox</option>
+            <option value="windows">Desktop, Windows 8.1, Opera</option>
+        </select>
+        <br><br>
+        <a id="mailToLink" href="mailto:detect.js.org@gmail.com">E-mail me with your user-agent</a>
+    </div>
+    <p>
+        <table class="apiExamples">
+            <caption>API:</caption>
+            <thead>
+                <tr>
+                    <th>API call</th>
+                    <th>Result</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="detectApi">
+                    <td>Detect.init({<br>
+                        &nbsp;&nbsp;userAgent : window.navigator.userAgent<br>
+                        })</td>
+                    <td><center>-</center></td>
+                    <td>After including detect scripts there will be only minimal Detect object created in global scope.
+                        In order to use API, it first need to be initialized with user-agent.</td>
+                </tr>
+                <tr class="detectApi">
+                    <td>Detect.init({<br>
+                        &nbsp;&nbsp;userAgent : window.navigator.userAgent,<br>
+                        &nbsp;&nbsp;screenWidth : screen.width,<br>
+                        &nbsp;&nbsp;screenHeight : screen.height,<br>
+                        &nbsp;&nbsp;devicePixelRatio : window.devicePixelRatio<br>
+                        })</td>
+                    <td><center>-</center></td>
+                    <td>This form of initialization required only for iOS devices in order to differentiate models</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="separator"></td>
+                </tr>
+                <tr class="typeApi">
+                    <td>Detect.Type.commercialName()</td>
+                    <td id="typeName"></td>
+                    <td></td>
+                </tr>
+                <tr class="familyApi">
+                    <td>Detect.Family.commercialName()</td>
+                    <td id="familyName"></td>
+                    <td></td>
+                </tr>
+                <tr class="deviceApi">
+                    <td>Detect.Device.commercialName()</td>
+                    <td id="deviceName"></td>
+                    <td></td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.commercialName()</td>
+                    <td id="osName"></td>
+                    <td></td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.version()</td>
+                    <td id="osVersion"></td>
+                    <td></td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.commercialName()</td>
+                    <td id="browserName"></td>
+                    <td></td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.version()</td>
+                    <td id="browserVersion"></td>
+                    <td></td>
+                </tr>
+                <tr class="detectApi">
+                    <td>Detect.allInfo()</td>
+                    <td>-></td>
+                    <td id="allInfo"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="separator"></td>
+                </tr>
+                <tr class="familyApi">
+                    <td>Detect.Family.is(Detect.F.Iphone)</td>
+                    <td id="belongsTo"></td>
+                    <td>F stands for Family and is a map of all known (to the library) device families</td>
+                </tr>
+                <tr class="familyApi">
+                    <td>Detect.Family.isOfAny(Detect.F.Iphone, Detect.F.Lumia, Detect.F.NexusSmartPhones)</td>
+                    <td id="belongsToAny"></td>
+                    <td></td>
+                </tr>
+                <tr class="deviceApi">
+                    <td>Detect.Device.is(Detect.D.Iphone5)</td>
+                    <td id="deviceIs"></td>
+                    <td>D stands for Device and is a map of all known devices</td>
+                </tr>
+                <tr class="deviceApi">
+                    <td>Detect.Device.isAnyOf(Detect.D.Iphone5, Detect.D.Ipad)</td>
+                    <td id="deviceIsAny"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="separator"></td>
+                </tr>
+                <tr class="typeApi">
+                    <td>Detect.Type.is(Detect.T.Unidentified)</td>
+                    <td id="isUnidentified"></td>
+                    <td></td>
+                </tr>
+                <tr class="typeApi">
+                    <td>Detect.Type.is(Detect.T.SmartPhone)</td>
+                    <td id="isSmartPhone"></td>
+                    <td></td>
+                </tr>
+                <tr class="typeApi">
+                    <td>Detect.Type.is(Detect.T.Tablet)</td>
+                    <td id="isTablet"></td>
+                    <td></td>
+                </tr>
+                <tr class="typeApi">
+                    <td>Detect.Type.is(Detect.T.Desktop)</td>
+                    <td id="isDesktop"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="separator"></td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.is(Detect.O.WindowsPhone)</td>
+                    <td id="osIs"></td>
+                    <td>O stands for OS (Operating System) and is a map of all known OSs</td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.isAnyOf(Detect.O.WindowsPhone, Detect.O.Android)</td>
+                    <td id="osIsAny"></td>
+                    <td></td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.versionIs('8')</td>
+                    <td id="osVersionIs"></td>
+                    <td>Will also match any minor versions (e.g. 8.1 or 8.2.2)</td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.versionIsExactly('8.1')</td>
+                    <td id="osVersionIsExactly"></td>
+                    <td>As it sounds, won't match 8.1.1</td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.versionIsLaterThan('9.0.1')</td>
+                    <td id="osVersionIsLaterThan"></td>
+                    <td>Exclusively, so will match 9.0.2, 9.1, 10.0 and so on</td>
+                </tr>
+                <tr class="osApi">
+                    <td>Detect.OS.versionIsEarlierThan('9.0.0')</td>
+                    <td id="osVersionIsEarlierThan"></td>
+                    <td>Exclusively, so will match 8.99.100, 7.0, but not 9.0.0, 10.0, etc</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="separator"></td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.is(Detect.B.AndroidWebkit)</td>
+                    <td id="browserIs"></td>
+                    <td>B stands for Browser and is a map of all known Browsers</td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.isAnyOf(Detect.B.AndroidWebkit, Detect.B.Chrome)</td>
+                    <td id="browserIsAny"></td>
+                    <td></td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.versionIs('4.0')</td>
+                    <td id="browserVersionIs"></td>
+                    <td></td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.versionIsLaterThan('0')</td>
+                    <td id="browserVersionIsLaterThan"></td>
+                    <td></td>
+                </tr>
+                <tr class="browserApi">
+                    <td>Detect.Browser.versionIsEarlierThan('100')</td>
+                    <td id="browserVersionIsEarlierThan"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </p>
+    <p>
+        There are limited amount of Operating Systems and Browsers on the market so ones the library get to "know" them
+        it will detect them even on the new Devices. But the amount of Devices on the market can be relatively described
+        as unlimited and constantly growing, so the library can only "know" about limited number of devices added
+        manually to it, which should basically represent companies business needs (it is unbelievable that there are
+        some company which can develop and test its products to be compatible with all devices ever built).
+    </p>
+    <p>
+        From the other side there is another need exist for the businesses: gather user-agents statistics to determine
+        from which devices/OSs/browsers users are coming. In this context there always will be a motivation to add all
+        possible devices to the library.
+    </p>
+    <p>
+        So this library will allow to check if current device is one of from the list of "known devices",
+        or return human-readable string like "Apple - iPhone Family" (from <code>Device.commercialFamilyName()</code>)
+        or "Apple - iPhone 5" (from <code>Device.commercialName()</code>).
+        And in case when device is "not known" to the library - it will simply return "Unknown" string as return value
+        for above methods.
+    </p>
+    <p>
+    <table class="apiExamples">
+        <caption>Extension example:</caption>
+        <thead>
+        <tr>
+            <th>API call</th>
+            <th>Result</th>
+            <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="detectApi">
+            <td>
+                Detect.registerExtension((function()&nbsp;{<br>
+                &nbsp;&nbsp;var userAgentInfo;<br>
+                <br>
+                &nbsp;&nbsp;return {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;init: function(userAgentInfoObj)&nbsp;{<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;userAgentInfo = userAgentInfoObj;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Your extension code...<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;}<br>
+                })());
+            </td>
+            <td><center>-</center></td>
+            <td>Will register extension whose init method will be launched at the end of Detect.init() call.
+                Actually detect-logic.js is an extension also. <br><br>
+                <b>Pay attention!</b> Init method of all registered
+                extensions will be also called whenever Detect.init() is called. So please make sure you don't
+                do the job for extending maps and creating new methods twice.
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.extend(Detect.D, {<br>
+                &nbsp;&nbsp;Iphone5: {extraInfo: "iPhone 5 info"},<br>
+                &nbsp;&nbsp;GalaxyS5: {extraInfo: "Galaxy S5 info"},<br>
+                &nbsp;&nbsp;Desktop: {extraInfo: "Desktop info"}<br>
+                })
+            </td>
+            <td><center>-</center></td>
+            <td>Meant to be used inside registered extensions.
+                Allows to extend one map (from detect-data.js) with same
+                map but with extended info. For example device's
+                map Detect.D originally looks like this:<br><br>
+                Detect.D = {<br>
+                &nbsp;&nbsp;Iphone5 : {name : "Apple - iPhone 5"},<br>
+                &nbsp;&nbsp;GalaxyS5 : {name : "Samsung - Galaxy S5"},<br>
+                &nbsp;&nbsp;Desktop : {name : "Desktop"}<br>
+                }<br><br>
+                but after this example method call it will become:<br><br>
+                Detect.D = {<br>
+                &nbsp;&nbsp;Iphone5 : {name : "Apple - iPhone 5", extraInfo: "iPhone 5 info"},<br>
+                &nbsp;&nbsp;GalaxyS5 : {name : "Samsung - Galaxy S5", extraInfo: "Galaxy S5 info"},<br>
+                &nbsp;&nbsp;Desktop : {name : "Desktop", extraInfo: "Desktop info"}<br>
+                }
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.Device.extraInfo = function()&nbsp;{<br>
+                &nbsp;&nbsp;return = this.rawResult().extraInfo;<br>
+                }
+            </td>
+            <td id="extraInfo"></td>
+            <td>Additional methods can be easily added to any object due to JS nature, but to get access to necessary
+                data inside those additional methods is a tricky part. For this purposes Detect.Device as well as OS
+                and Browser has methods rawResult(). It will return raw result object received as a result of detection
+                logic and used inside to provide info in appropriate way for all public methods.
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.extend(Detect.F, {...}) + Detect.Family.extraInfo = function()&nbsp;{...}
+            </td>
+            <td id="familyExtraInfo"></td>
+            <td>
+                Same as above but for Family
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.extend(Detect.O, {...}) + Detect.OS.extraInfo = function()&nbsp;{...}
+            </td>
+            <td id="osExtraInfo"></td>
+            <td>
+                Same as above but for OS
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.extend(Detect.B, {...}) + Detect.Browser.extraInfo = function()&nbsp;{...}
+            </td>
+            <td id="browserExtraInfo"></td>
+            <td>
+                Same as above but for Browser
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </p>
+    <p>
+    <table class="apiExamples">
+        <caption>Device Resolution extension:</caption>
+        <thead>
+        <tr>
+            <th>API call</th>
+            <th>Result</th>
+            <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="detectApi">
+            <td>
+                Detect.extend(Detect.D, {<br>
+                &nbsp;&nbsp;Iphone5: {width: 1136, height: 640},<br>
+                &nbsp;&nbsp;Nexus5: {width: 1920, height: 1080},<br>
+                &nbsp;&nbsp;IpadRetina: {width: 1024, height: 768}<br>
+                })
+            </td>
+            <td><center>-</center></td>
+            <td>
+                Adds resolution info to the data
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.Device.width = function() {<br>
+                &nbsp;&nbsp;return this.rawResult().width;<br>
+                };
+            </td>
+            <td id="deviceExtensionWidth"></td>
+            <td>
+                Adds width getter
+            </td>
+        </tr>
+        <tr class="detectApi">
+            <td>
+                Detect.Device.height = function() {<br>
+                &nbsp;&nbsp;return this.rawResult().height;<br>
+                };
+            </td>
+            <td id="deviceExtensionHeight"></td>
+            <td>
+                Adds height getter
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </p>
+    <p>Cheers!<br>
+    Bit</p>
+</body>
+</html>

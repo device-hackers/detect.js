@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Tests</title>
+    <link rel="stylesheet" href="res/css/qunit-theme-burce.css">
+    <link rel="stylesheet" href="res/css/qunit-theme-burce-custom.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="res/js/qunit-2.0.1.js"></script>
+<script src="res/js/qunit-parameterize.js"></script>
+<script src="res/js/com/playtech/ngm/detect/public/js/detect-data.js"></script>
+<script src="res/js/com/playtech/ngm/detect/public/js/detect-logic.js"></script>
+<script src="res/js/unit-tests.js"></script>
+<script>
+    QUnit.done(function(details) {
+        //Just to prettify readability (put user agents to pre block)
+        var testMessages = document.getElementById("qunit-tests").getElementsByClassName("test-message");
+
+        for (var i = 0; i < testMessages.length; i++) {
+            if (/\{/.test(testMessages[i].innerHTML)) {
+                testMessages[i].innerHTML = testMessages[i].innerHTML.
+                        replace(/\{\{/g, "<pre id='userAgent'>").
+                        replace(/\}\}/g, "</pre>");
+            }
+        }
+    });
+</script>
+</body>
+</html>
