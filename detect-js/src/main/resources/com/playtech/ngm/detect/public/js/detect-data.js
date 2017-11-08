@@ -334,7 +334,7 @@ if (window.Detect && console && console.error) {
                     extensions[i].init(userAgentInfo);
                     console.log("[Detect] Initialized " + (i == 0 ? "logic" : "extension " + i));
                 } else {
-                    console.error("Can't initialize extension " + i + " due to missing init() method!");
+                    console.error("Can't initialize werrwe extension " + i + " due to missing init() method!");
                 }
             }
         }
