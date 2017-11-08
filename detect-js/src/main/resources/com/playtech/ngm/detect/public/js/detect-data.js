@@ -325,7 +325,7 @@ if (window.Detect && console && console.error) {
                 }
             } : null;
 
-            console.log("[Detect] Initialized data");
+            console.log("[Detect] Initialized data sdfsd");
         }
 
         function initExtensions() {
